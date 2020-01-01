@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_news_app/src/bloc/home/home_bloc.dart';
 import 'package:flutter_news_app/src/model/category/category.dart';
 import 'package:flutter_news_app/src/model/topheadlinesnews/response_top_headlinews_news.dart';
+import 'package:flutter_news_app/src/ui/webViewNews.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -67,7 +69,7 @@ class HomeScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
-        'Top stories at the moment',
+        'Berita populer hari ini',
         style: Theme.of(context).textTheme.caption.merge(
               TextStyle(
                 color: Color(0xFF325384).withOpacity(0.5),
@@ -81,7 +83,7 @@ class HomeScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
-        'Latest News',
+        'Berita Terbaru',
         style: Theme.of(context).textTheme.subtitle.merge(
               TextStyle(
                 fontSize: 18.0,
@@ -130,20 +132,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   String getStrToday() {
-    var today = DateFormat().add_yMMMMd().format(DateTime.now());
-    var strDay = today.split(" ")[1].replaceFirst(',', '');
-    if (strDay == '1') {
-      strDay = strDay + "st";
-    } else if (strDay == '2') {
-      strDay = strDay + "nd";
-    } else if (strDay == '3') {
-      strDay = strDay + "rd";
-    } else {
-      strDay = strDay + "th";
-    }
-    var strMonth = today.split(" ")[0];
-    var strYear = today.split(" ")[2];
-    return "$strDay $strMonth $strYear";
+    initializeDateFormatting();
+    var today = DateFormat("EEEE, d MMMM yyyy", "id").format(DateTime.now());
+    return "$today";
   }
 }
 
@@ -161,7 +152,7 @@ class WidgetTitle extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'News Today\n',
+                text: 'Berita Hari ini\n',
                 style: Theme.of(context).textTheme.title.merge(
                       TextStyle(
                         color: Color(0xFF325384),
@@ -192,13 +183,13 @@ class WidgetCategory extends StatefulWidget {
 
 class _WidgetCategoryState extends State<WidgetCategory> {
   final listCategories = [
-    Category('', 'All'),
-    Category('assets/images/img_business.png', 'Business'),
-    Category('assets/images/img_entertainment.png', 'Entertainment'),
-    Category('assets/images/img_health.png', 'Health'),
-    Category('assets/images/img_science.png', 'Science'),
-    Category('assets/images/img_sport.png', 'Sport'),
-    Category('assets/images/img_technology.png', 'Technology'),
+    Category('', 'Semua Berita'),
+    Category('assets/images/img_business.png', 'Bisnis'),
+    Category('assets/images/img_entertainment.png', 'Hiburan'),
+    Category('assets/images/img_health.png', 'Kesehatan'),
+    Category('assets/images/img_science.png', 'Ilmu Pengetahuan'),
+    Category('assets/images/img_sport.png', 'Olahraga'),
+    Category('assets/images/img_technology.png', 'Teknologi'),
   ];
   int indexSelectedCategory = 0;
 
@@ -369,14 +360,21 @@ class _WidgetLatestNewsState extends State<WidgetLatestNews> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async {
-                    if (await canLaunch(itemArticle.url)) {
-                      await launch(itemArticle.url);
-                    } else {
-                      scaffoldState.currentState.showSnackBar(SnackBar(
-                        content: Text('Could not launch news'),
-                      ));
-                    }
+                  // onTap: () async {
+                  //   if (await canLaunch(itemArticle.url)) {
+                  //     await launch(itemArticle.url);
+                  //   } else {
+                  //     scaffoldState.currentState.showSnackBar(SnackBar(
+                  //       content: Text('Could not launch news'),
+                  //     ));
+                  //   }
+                  // },
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                WebViewNews(itemArticle.url)));
                   },
                   child: Container(
                     width: mediaQuery.size.width,
@@ -448,11 +446,18 @@ class _WidgetLatestNewsState extends State<WidgetLatestNews> {
             );
           } else {
             return GestureDetector(
-              onTap: () async {
-                if (await canLaunch(itemArticle.url)) {
-                  await launch(itemArticle.url);
-                }
-              },
+              // onTap: () async {
+              //   if (await canLaunch(itemArticle.url)) {
+              //     await launch(itemArticle.url);
+              //   }
+              // },
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                WebViewNews(itemArticle.url)));
+                  },
               child: Container(
                 width: mediaQuery.size.width,
                 child: Row(
@@ -508,7 +513,7 @@ class _WidgetLatestNewsState extends State<WidgetLatestNews> {
                           fit: BoxFit.cover,
                         ),*/
                         child: CachedNetworkImage(
-                          imageUrl: itemArticle.urlToImage,
+                          imageUrl: "${itemArticle.urlToImage}",
                           imageBuilder: (context, imageProvider) {
                             return Container(
                               width: 72.0,

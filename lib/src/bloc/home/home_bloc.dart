@@ -36,7 +36,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
     final apiRepository = ApiRepository();
     final categoryLowerCase = event.category.toLowerCase();
     switch (categoryLowerCase) {
-      case 'all':
+      case 'semua berita':
         final data = await apiRepository.fetchTopHeadlinesNews();
         if (data.error == null) {
           yield DataSuccess(data);
@@ -44,7 +44,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed('Failed to fetch data');
         }
         break;
-      case 'business':
+      case 'bisnis':
         final data = await apiRepository.fetchTopBusinessHeadlinesNews();
         if (data.error == null) {
           yield DataSuccess(data);
@@ -52,7 +52,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed(data.error);
         }
         break;
-      case 'entertainment':
+      case 'hiburan':
         final data = await apiRepository.fetchTopEntertainmentHeadlinesNews();
         if (data.error == null) {
           yield DataSuccess(data);
@@ -60,7 +60,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed(data.error);
         }
         break;
-      case 'health':
+      case 'kesehatan':
         final data = await apiRepository.fetchTopHealthHeadlinesNews();
         if (data.error == null) {
           yield DataSuccess(data);
@@ -68,7 +68,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed(data.error);
         }
         break;
-      case 'science':
+      case 'ilmu pengetahuan':
         final data = await apiRepository.fetchTopScienceHeadlinesNews();
         if (data.error == null) {
           yield DataSuccess(data);
@@ -76,7 +76,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed(data.error);
         }
         break;
-      case 'sport':
+      case 'olahraga':
         final data = await apiRepository.fetchTopSportHeadlinesNews();
         if (data != null) {
           yield DataSuccess(data);
@@ -84,7 +84,7 @@ class HomeBloc extends Bloc<DataEvent, DataState> {
           yield DataFailed(data.error);
         }
         break;
-      case 'technology':
+      case 'teknologi':
         final data = await apiRepository.fetchTopTechnologyHeadlinesNews();
         if (data != null) {
           yield DataSuccess(data);
